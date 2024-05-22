@@ -1,3 +1,6 @@
+This is a working draft.  
+
+
 GraphQL Complete Index
 ======================
 
@@ -6,7 +9,23 @@ Sometimes, some of the data in a GraphQL instance is intended for public consump
 
 sitemap.xml and robots.txt files direct robots to index web sites.  An analog for GraphQL is necessary.  This proposal puts forth a standard known-named GraphQL query to be used by robots to fetch a list of queries that should run in order to index the instance.
 
-The proposed name for this query is `graphQLCompleteIndex`.  This query returns a list and has the following fields:
+The proposed name for this query is `graphQLCompleteIndex`.  The object type returned from a query of `graphQLCompleteIndex` is `graphqlCompleteIndexResult`. 
+
+```graphql
+query Robot {
+  graphQLCompleteIndex {
+    query
+    description
+    hasCursor
+    cursorDataType
+    initialValue
+    increment
+    nextCursorField
+  }
+}
+```
+
+This query returns a list and has the following fields:
 
 * `query`: `String!` - A query to run.
 
@@ -14,7 +33,7 @@ The proposed name for this query is `graphQLCompleteIndex`.  This query returns 
 
 * `hasCursor`: `Bool!` - Whether the query has a parameter named `cursor` that should be iterated.  Set to `false` for non-iterating queries.
 
-* `cursorDataType`: `String` - Int or String.  Defaults to String.
+* `cursorDataType`: `String` - Int or String.  Defaults to String.  The data type of the `$cursor` variable is specified by this field.
   
 * `initialValue`: `String` - The starting value of the `cursor` parameter.  
   
@@ -67,10 +86,30 @@ When this query is ran the first time, the value of `initialValue` will be used.
 Iterating Queries with `increment`
 ----------------------------------
 
-For GraphQL instances that do not use the GraphQL Complete Connection Model, incrementing the `initialValue` may be used.  To do this, the `initialValue` field must be a numeric string.  For each iteration the current `$cursor` value is incremented by the 
+For GraphQL instances that do not use the GraphQL Complete Connection Model, incrementing the `initialValue` may be used.  To do this, the `initialValue` field must be a numeric string and `cursorDataType` must be `Int`.  For each iteration the current `$cursor` value is incremented by the `increment`.
+
+```graphql
+query Robot($cursor: Int!) {
+  incrementQuery(startAt: $cursor, pageSize: 10) {
+    id
+    name
+  }
+}
+```
 
 
-`CursorDataType`
-----------------
+Indexing a GraphQL Instance
+---------------------------
 
-Development of this specification reveals iterating queries with increment can cause a data type mis-match if the `$cursor` variable is an `Int!` and not a `String!`.  Furter development of this specification is necessary to solve this problem.
+Begin with a query to `graphQLCompleteIndex`.  This query will return a list, if it exists, of `graphQLCompleteIndexResult` objects.  This query is not paginated and must return all `graphQLCompleteIndexResult`s for the instance.  If `graphQLCompleteIndex` query does not exist, then this specification is not used.
+
+For each `graphQLCompleteIndexResult`, execute the query with any necessary parameters, as detailed above.  Processing of iterating queries ends when no new results are returned.
+
+
+Contributors
+------------
+
+Tom H Anderson <tom.h.anderson@gmail.com>
+
+
+
