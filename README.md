@@ -31,7 +31,7 @@ This query returns a list and has the following fields:
 
 * `description`: `String!` - A description of the data the query will return.  This is an important field and therefore required.  
 
-* `hasCursor`: `Bool!` - Whether the query has a parameter named `cursor` that should be iterated.  Set to `false` for non-iterating queries.
+* `hasCursor`: `Bool!` - Whether the query has a variable named `$cursor` that should be iterated.  Set to `false` for non-iterating queries.
 
 * `cursorDataType`: `String` - Int or String.  Defaults to String.  The data type of the `$cursor` variable is specified by this field.
   
@@ -39,7 +39,7 @@ This query returns a list and has the following fields:
   
 * `increment`: `Int` - The value to increment the cursor by for each iteration.  If the `cursorDataType` is `Int` then `initialValue` is presumed to be a numeric string. 
   
-* `nextCursorField`: String - When the next cursor starting value is derived from the current query, this is the field name containing the value.
+* `nextCursorField`: String - When the next cursor starting value is derived from the current query, this is the field name containing the cursor value for the next iteration.
   
 These fields allow for pagination with the GraphQL Complete Connection Model and ad-hoc pagination strategies as shown below.
 
@@ -64,7 +64,7 @@ Iterating Queries with `nextCursorField`
 
 An iterating query, designated by `hasCursor = true`, is a paginated query that takes a single parameter named `$cursor`.  The initial value of `$cursor` is specified by the `initialValue` field.  Cursor values are specified as strings but numeric strings may be used if the `nextCursorField` field is null.  When the `nextCursorField` is not null, the value of that field is the field name that contains the next cursor value to use.
 
-This example uses the GraphQL Complete Connection Model.  The value of `nextCursorField` is `pageInfo`.
+This example uses the [GraphQL Complete Connection Model](https://relay.dev/graphql/connections.htm).  The value of `nextCursorField` is `pageInfo`.
 
 ```graphql
 query Robot ($cursor: String!) {
@@ -80,13 +80,13 @@ query Robot ($cursor: String!) {
 }
 ```
 
-When this query is ran the first time, the value of `initialValue` will be used.  In the case of the GraphQL Complete Connection Model this may be `MA==` (0 in base64) so the query will return records one through ten.  
+When this query is run the first time, the value of `initialValue` will be used.  In the case of the GraphQL Complete Connection Model this may be `MA==` (0 in base64) so the query will return records one through ten.  
 
 
 Iterating Queries with `increment`
 ----------------------------------
 
-For GraphQL instances that do not use the GraphQL Complete Connection Model, incrementing the `initialValue` may be used.  To do this, the `initialValue` field must be a numeric string and `cursorDataType` must be `Int`.  For each iteration the current `$cursor` value is incremented by the `increment`.
+For GraphQL instances that do not use the GraphQL Complete Connection Model, incrementing the `initialValue` may be used.  To do this, the `initialValue` field must be a numeric string and `cursorDataType` must be `Int`.  For each iteration, the current `$cursor` value is incremented by the `increment`.
 
 ```graphql
 query Robot($cursor: Int!) {
