@@ -9,7 +9,7 @@ Sometimes, some of the data in a GraphQL instance is intended for public consump
 
 sitemap.xml and robots.txt files direct robots to index web sites.  An analog for GraphQL is necessary.  This proposal puts forth a standard, known-named, GraphQL query to be used by robots to fetch a list of queries that should run in order to index the instance.
 
-The proposed name for this query is `graphQLCompleteIndex`.  The object type returned from a query of `graphQLCompleteIndex` is `graphqlCompleteIndexResult`. 
+The proposed name for this query is `graphQLCompleteIndex`.  The object type returned from a query of `graphQLCompleteIndex` is a list of `graphqlCompleteIndexResult`. 
 
 ```graphql
 query Robot {
