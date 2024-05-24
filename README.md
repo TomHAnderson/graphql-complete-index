@@ -41,20 +41,16 @@ query Robot {
 
 This query returns a list and has the following fields:
 
-* `query`: `String!` - A query to run.
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| query | String! | A query to run. |
+| description | String! | A description of the data the query will return.  This is an important field and therefore required. |
+| hasCursor | Bool! | Whether the query has a variable named `$cursor` that should be iterated.  Set to `false` for non-iterating queries. |
+| cursorDataType | String | Int or String.  Defaults to String.  The data type of the `$cursor` variable is specified by this field. |
+| initialValue | String | The starting value of the `cursor` parameter. |
+| increment | Int | The value to increment the cursor by for each iteration.  If the `cursorDataType` is `Int` then `initialValue` is presumed to be a numeric string. |
+| nextCursorField | String | When the next cursor starting value is derived from the current query, this is the field name containing the cursor value for the next iteration. |
 
-* `description`: `String!` - A description of the data the query will return.  This is an important field and therefore required.  
-
-* `hasCursor`: `Bool!` - Whether the query has a variable named `$cursor` that should be iterated.  Set to `false` for non-iterating queries.
-
-* `cursorDataType`: `String` - Int or String.  Defaults to String.  The data type of the `$cursor` variable is specified by this field.
-  
-* `initialValue`: `String` - The starting value of the `cursor` parameter.  
-  
-* `increment`: `Int` - The value to increment the cursor by for each iteration.  If the `cursorDataType` is `Int` then `initialValue` is presumed to be a numeric string. 
-  
-* `nextCursorField`: String - When the next cursor starting value is derived from the current query, this is the field name containing the cursor value for the next iteration.
-  
 These fields allow for pagination with the GraphQL Complete Connection Model and ad-hoc pagination strategies as shown below.
 
 
