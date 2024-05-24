@@ -12,6 +12,20 @@ sitemap.xml and robots.txt files direct robots to index web sites.  An analog fo
 The proposed name for this query is `graphQLCompleteIndex`.  The object type returned from a query of `graphQLCompleteIndex` is a list of `graphqlCompleteIndexResult`. 
 
 ```graphql
+type graphqlCompleteIndexResult {
+  query: String!
+  description: String!
+  hasCursor: Bool!
+  cursorDataType: String
+  initialValue: String
+  increment: Int
+  nextCursorField: String
+}
+```
+
+A query for a robot
+
+```graphql
 query Robot {
   graphQLCompleteIndex {
     query
