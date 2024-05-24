@@ -78,7 +78,7 @@ Iterating Queries with `nextCursorField`
 
 An iterating query, designated by `hasCursor = true`, is a paginated query that takes a single parameter named `$cursor`.  The initial value of `$cursor` is specified by the `initialValue` field.  Cursor values are specified as strings but numeric strings may be used if the `nextCursorField` field is null.  When the `nextCursorField` is not null, the value of that field is the field name that contains the next cursor value to use.
 
-This example uses the [GraphQL Complete Connection Model](https://relay.dev/graphql/connections.htm).  The value of `nextCursorField` is `pageInfo`.
+This example uses the [GraphQL Complete Connection Model](https://relay.dev/graphql/connections.htm).  The value of `nextCursorField` is `endCursor`.
 
 ```graphql
 query Robot ($cursor: String!) {
@@ -88,7 +88,9 @@ query Robot ($cursor: String!) {
         id
         name
       }
-      pageInfo
+      pageInfo {
+        endCursor
+      }
     }
   }
 }
